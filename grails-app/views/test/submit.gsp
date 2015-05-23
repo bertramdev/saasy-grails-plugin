@@ -15,41 +15,53 @@
 </head>
 <body>
 	<div class="container">
-	<h2>Test</h2>
-	<form>
-	  <div  id="payload" class="form-group">
-	    <label for="api">API</label>
-		<select class="form-control" name="api">
-		  <option>serviceSubscriber</option>
-		  <option>servicePlan</option>
-		  <option>serviceOrder</option>
-		  <option>servicePlanProductType</option>
-		  <option>serviceSubscription</option>
-		  <option>serviceInvoice</option>
-		  <option>serviceLimit</option>
-		  <option>composite</option>
-		  <option>paymentSource</option>
-		</select>
-	  </div>
-	  <div class="form-group">
-	    <label for="method">Method</label>
-		<select class="form-control" name="method">
-		  <option>create</option>
-		  <option>update</option>
-		  <option>bulkUpdateAttributes</option>
-		</select>
-	  </div>
-	  <div class="form-group">
-	    <label for="request-body">Request Body</label>
-	    <textarea name="request-body" class="form-control" rows="8">
+		<h2>Plugin Test via Browser</h2>
+		<h5><g:link uri="${grailsApplication.config.saasy.baseUrl}/apiDoc" target="_new">Saasy API Docs</g:link></h5>
+		<form>
+		  <div  id="payload" class="form-group">
+		    <label for="api">API</label>
+			<select class="form-control" name="api">
+			  <option>serviceSubscriber</option>
+			  <option>servicePlan</option>
+			  <option>serviceOrder</option>
+			  <option>servicePlanProductType</option>
+			  <option>serviceSubscription</option>
+			  <option>serviceInvoice</option>
+			  <option>serviceLimit</option>
+			  <option>composite</option>
+			  <option>paymentSource</option>
+			</select>
+		  </div>
+		  <div class="form-group">
+		    <label for="method">Method</label>
+			<select class="form-control" name="method">
+			  <option>get</option>
+			  <option>list</option>
+			  <option>create</option>
+			  <option>update</option>
+			  <option>bulkUpdateAttributes</option>
+			  <option>cancel</option>
+			  <option>deactivate</option>
+			  <option>activate</option>
+			  <option>validate</option>
+			  <option>authorize</option>
+			</select>
+		  </div>
+		  <div class="form-group">
+		    <label for="method">Query String</label>
+			<input class="form-control" name="query-string" value="?"/>
+		  </div>
+		  <div class="form-group">
+		    <label for="request-body">Request Body</label>
+		    <textarea name="request-body" class="form-control" rows="8">
 {
   "name": "value"
 }
-	    </textarea>
-	  </div>
-	</form>
-  <button id="submit-btn" class="btn btn-default">Submit</button>
-	<pre id="log" class="prettyprint"></pre>
+		    </textarea>
+		  </div>
+		</form>
+		<button id="submit-btn" class="btn btn-default">Submit</button>
+		<pre id="log" class="prettyprint"></pre>
 	</div>
 	<script>
 	$(document).ready(function() {
@@ -57,7 +69,7 @@
 
 		$("#submit-btn").on('click', function() {
 			var request = $.ajax({
-			  url: "/api/"+$('select[name=api]').val()+'/'+$('select[name=method]').val(),
+			  url: "/api/"+$('select[name=api]').val()+'/'+$('select[name=method]').val()+$('input[name=query-string]').val(),
 			  method: "POST",
 			  processData: false,
 			  data: $('textarea[name=request-body]').val(),
