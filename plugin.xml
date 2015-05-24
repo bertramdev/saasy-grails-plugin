@@ -1,12 +1,13 @@
 <plugin name='saasy' version='0.1-SNAPSHOT' grailsVersion='2.4 &gt; *'>
   <author>Jeremy Leng</author>
+  <authorEmail>jleng@bcap.com</authorEmail>
   <title>Saasy Plugin Plugin</title>
-  <description>Brief summary/description of the plugin.
+  <description>Saasy Grails Plugin provides a Grails service API wrapper around the Saasy Cloud API (getsaasy.com)
 </description>
   <documentation>http://grails.org/plugin/saasy-plugin</documentation>
   <type>SaasyGrailsPlugin</type>
   <resources>
-    <resource>com.getsaasy.plugin.TestController</resource>
+    <resource>com.getsaasy.plugin.SaasyPluginTestController</resource>
     <resource>com.getsaasy.plugin.AbstractSaasyService</resource>
     <resource>com.getsaasy.plugin.SaasyCompositeService</resource>
     <resource>com.getsaasy.plugin.SaasyPaymentSourceService</resource>

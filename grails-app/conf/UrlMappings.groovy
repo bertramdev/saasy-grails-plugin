@@ -2,7 +2,7 @@ class UrlMappings {
 
 	static mappings = {
 
-        "/api/$typeName/$command/$id?(.$format)?"(controller:'test', action:'command') {
+        "/api/$typeName/$command/$id?(.$format)?"(controller:'saasyPluginTest', action:'command') {
         }
 
 
