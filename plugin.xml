@@ -1,0 +1,21 @@
+<plugin name='saasy' version='0.1-SNAPSHOT' grailsVersion='2.4 &gt; *'>
+  <author>Jeremy Leng</author>
+  <title>Saasy Plugin Plugin</title>
+  <description>Brief summary/description of the plugin.
+</description>
+  <documentation>http://grails.org/plugin/saasy-plugin</documentation>
+  <type>SaasyGrailsPlugin</type>
+  <resources>
+    <resource>com.getsaasy.plugin.TestController</resource>
+    <resource>com.getsaasy.plugin.AbstractSaasyService</resource>
+    <resource>com.getsaasy.plugin.SaasyCompositeService</resource>
+    <resource>com.getsaasy.plugin.SaasyPaymentSourceService</resource>
+    <resource>com.getsaasy.plugin.SaasyServiceInvoiceService</resource>
+    <resource>com.getsaasy.plugin.SaasyServiceLimitService</resource>
+    <resource>com.getsaasy.plugin.SaasyServiceOrderService</resource>
+    <resource>com.getsaasy.plugin.SaasyServicePlanProductTypeService</resource>
+    <resource>com.getsaasy.plugin.SaasyServicePlanService</resource>
+    <resource>com.getsaasy.plugin.SaasyServiceSubscriberService</resource>
+    <resource>com.getsaasy.plugin.SaasyServiceSubscriptionService</resource>
+  </resources>
+</plugin>

@@ -2,7 +2,7 @@ package com.getsaasy.plugin
 
 import grails.converters.*
 
-class TestController {
+class SaasyPluginTestController {
 	def grailsApplication
 	private getTestService() {
         def typeName = params.typeName ?: ''

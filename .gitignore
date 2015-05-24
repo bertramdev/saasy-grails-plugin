@@ -18,3 +18,5 @@ goVivid.iml
 /deps.txt
 
 /src/sql/DEV_4-22-15.sql
+
+*.zip

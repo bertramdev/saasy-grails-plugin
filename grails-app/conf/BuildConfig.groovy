@@ -16,6 +16,13 @@ grails.project.fork = [
     console: [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256]
 ]
 
+grails.project.repos.bertramlabsSnap.url = "http://nexus.bertramlabs.com/content/repositories/publicSnapshots"
+
+grails.project.repos.bertramlabsRel.url = "http://nexus.bertramlabs.com/content/repositories/publicReleases"
+
+grails.project.repos.default = "bertramlabsSnap"
+grails.release.scm.enabled = false
+
 grails.project.dependency.resolver = "maven" // or ivy
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies

@@ -1,6 +1,7 @@
 class SaasyGrailsPlugin {
     // the plugin version
-    def version = "0.1"
+    def groupId = "com.bertramlabs.plugins"
+    def version = "0.1-SNAPSHOT"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "2.4 > *"
     // resources that are excluded from plugin packaging
@@ -10,10 +11,10 @@ class SaasyGrailsPlugin {
 
     // TODO Fill in these fields
     def title = "Saasy Plugin Plugin" // Headline display name of the plugin
-    def author = "Your name"
-    def authorEmail = ""
+    def author = "Jeremy Leng"
+    def authorEmail = "jleng@bcap.com"
     def description = '''\
-Brief summary/description of the plugin.
+Saasy Grails Plugin provides a Grails service API wrapper around the Saasy Cloud API (getsaasy.com)
 '''
 
     // URL to the plugin's documentation
