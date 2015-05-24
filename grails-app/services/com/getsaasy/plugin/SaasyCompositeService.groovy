@@ -9,6 +9,11 @@ class SaasyCompositeService extends AbstractSaasyService {
     // POST
     // /api/rest/compositeServiceSubscriber 
     def saveSubscriberInformation(params) {
-
+        def body = [servicePaymentSource:params.remove('servicePaymentSource'), 
+            serviceShippingAddress:params.remove('serviceShippingAddress'),
+            serviceSubscription:params.remove('serviceSubscription'),
+            serviceSubscriber:params.remove('serviceSubscriber')
+        ]
+        doApiCall(SERVICE_BASE_PATH, params, body, POST)
     }
 }

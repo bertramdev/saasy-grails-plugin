@@ -38,13 +38,14 @@ class SaasyServiceSubscriberService extends AbstractSaasyService {
     // POST
     // /api/serviceSubscriber/bulkUpdateAttributes
     def bulkUpdateAttributes(params) {
-
+        def body = [ids:params.remove(IDS), attributes:params.remove('attributes')]
+        transformSuccess(doApiCall('/api/'+API_NAME+'/bulkUpdateAttributes', params, body, POST))
     }
 
     // DELETE
     // /api/rest/serviceSubscriber/{id}
     def deactivate(params) {
-        transformGetSuccess(doApiCall(SERVICE_BASE_PATH, params, null, DELETE))
+        transformSuccess(doApiCall(SERVICE_BASE_PATH, params, null, DELETE))
     }
 
 }

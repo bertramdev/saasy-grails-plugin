@@ -8,15 +8,15 @@
 .pln{color:#000}@media screen{.str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun,.opn,.clo{color:#660}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec,.var{color:#606}.fun{color:red}}@media print,projection{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun,.opn,.clo{color:#440}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style-type:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}
 
 #log {
-	margin:10px;
+	margin:20px;
 }
 
 </style>
 </head>
 <body>
 	<div class="container">
-		<h2>Plugin Test via Browser</h2>
-		<h5><g:link uri="${grailsApplication.config.saasy.baseUrl}/apiDoc" target="_new">Saasy API Docs</g:link></h5>
+		<h2>${grailsApplication.metadata['app.name']} Browser Test</h2>
+		<h5><g:link uri="${grailsApplication.config.saasy.baseUrl}/apiDoc" target="_new">${grailsApplication.metadata['app.name']} API Docs</g:link></h5>
 		<form>
 		  <div  id="payload" class="form-group">
 		    <label for="api">API</label>
@@ -60,7 +60,9 @@
 		    </textarea>
 		  </div>
 		</form>
-		<button id="submit-btn" class="btn btn-default">Submit</button>
+		<div class="text-center">
+		<button id="submit-btn" class="btn btn-success">Submit</button>
+		</div>
 		<pre id="log" class="prettyprint"></pre>
 	</div>
 	<script>
@@ -76,9 +78,11 @@
 			  contentType: "application/json"
 			}).done(function( data, textStatus, textStatus ) {
 			  var str = JSON.stringify(data, null, 4);
+			  $( "#log" ).removeClass();
 			  $( "#log" ).show();
 //			  $( "#log" ).text( textStatus.responseText );
 			  $( "#log" ).text( str );
+			  $( "#log" ).addClass('prettyprint');
 			  prettyPrint();
 			});			
 		});

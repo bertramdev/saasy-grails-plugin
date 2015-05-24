@@ -11,18 +11,31 @@ class TestController {
         rtn
 	}
 
-    def submit() {
+    def index() {
 
     }
 
     def command() {
-        params[params.typeName] = readPayload()
-        params.id = params.id ?: params[params.typeName]?.id
-        params.externalId = params.externalId ?: params[params.typeName]?.externalId
-        def output = testService."${params.command}"(params)
-        if (output instanceof Boolean) {
-            output = [success:output]
-
+        def output = [success:false]
+        try {
+            if (params.command == 'create' || params.command == 'udpate')
+                params[params.typeName] = readPayload()
+            else {
+                def body = readPayload()
+                body.each {k,v->
+                    params[k] = v
+                }
+            }
+            params.id = params.id ?: params[params.typeName]?.id
+            params.externalId = params.externalId ?: params[params.typeName]?.externalId
+            output = testService."${params.command}"(params)
+            if (output instanceof Boolean) {
+                output = [success:output]
+            }
+        } catch (Throwable t) {
+            try { output.data = t.data } catch(Throwable t1) {}
+            try { output.responseCode = t.responseCode } catch(Throwable t1) {}
+            output.throwableToString = t.toString()
         }
         render output as JSON
     }

@@ -37,13 +37,18 @@ class SaasyServicePlanService extends AbstractSaasyService {
     // DELETE
     // /api/rest/servicePlan/{id}
     def deactivate(params) {
-        transformGetSuccess(doApiCall(SERVICE_BASE_PATH, params, null, DELETE))
+        transformSuccess(doApiCall(SERVICE_BASE_PATH, params, null, DELETE))
+    }
+
+    def bulkUpdateAttributes(params) {
+        def body = [ids:params.remove(IDS), attributes:params.remove('attributes')]
+        transformSuccess(doApiCall('/api/'+API_NAME+'/bulkUpdateAttributes', params, body, POST))
     }
 
     // GET
     // /api/servicePlan/activate/{id}
     def activate(params) {
-        transformGetSuccess(doApiCall('/api/servicePlan/activate/'+(params.id?:'0'), [externalId:params.externalId], null, GET))
+        transformSuccess(doApiCall('/api/servicePlan/activate/'+(params.id?:'0'), [externalId:params.externalId], null, GET))
     }
 
 }

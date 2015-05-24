@@ -34,13 +34,9 @@ class SaasyServicePlanProductTypeService extends AbstractSaasyService {
         transformPostOutput(doApiCall(SERVICE_BASE_PATH, params, body, PUT))
     }
 
-
     // DELETE
     // /api/rest/servicePlanProductType/{id}
     def cancel(params) {
-
+        transformSuccess(doApiCall(SERVICE_BASE_PATH, params, null, DELETE))
     }
-
-
-
 }

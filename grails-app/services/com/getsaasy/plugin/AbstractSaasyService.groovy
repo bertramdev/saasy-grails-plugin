@@ -25,6 +25,8 @@ import static groovyx.net.http.Method.*
 
 abstract class AbstractSaasyService {
 	def grailsApplication
+	static IDS = 'ids'
+	static ATTRIBUTES = 'attributes'
 
 	protected getApiKey() {
 		if (grailsApplication.config.saasy.containsKey('apiKey')) {
@@ -220,7 +222,7 @@ abstract class AbstractSaasyService {
 		return output
 	}
 
-	protected transformGetSuccess(returnMap) {
+	protected transformSuccess(returnMap) {
         returnMap.success
 	}
 
