@@ -100,6 +100,7 @@ abstract class AbstractSaasyService {
     	}
     	apiParams.uri = (baseUrl+path)
     	def output = doHttp(apiParams,method)
+    	println output
     	if (output.status == 401) {
     		apiParams.urlParams.token = newToken()
     		if (apiParams.urlParams.token) output = doHttp(apiParams,method)

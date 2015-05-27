@@ -1,6 +1,7 @@
 package com.getsaasy.plugin
 
 import grails.transaction.Transactional
+import static groovyx.net.http.Method.*
 
 @Transactional
 class SaasyCompositeService extends AbstractSaasyService {
@@ -12,6 +13,7 @@ class SaasyCompositeService extends AbstractSaasyService {
         def body = [servicePaymentSource:params.remove('servicePaymentSource'), 
             serviceShippingAddress:params.remove('serviceShippingAddress'),
             serviceSubscription:params.remove('serviceSubscription'),
+            servicePlan:params.remove('servicePlan'),
             serviceSubscriber:params.remove('serviceSubscriber')
         ]
         doApiCall(SERVICE_BASE_PATH, params, body, POST)

@@ -50,7 +50,7 @@ Saasy Grails Plugin provides a Grails service API wrapper around the Saasy Cloud
     }
 
     def doWithApplicationContext = { ctx ->
-        // TODO Implement post initialization spring config (optional)
+        println 'Saasy Plugin Loaded v.'+version
     }
 
     def onChange = { event ->
