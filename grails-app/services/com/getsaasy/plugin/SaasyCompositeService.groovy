@@ -14,7 +14,8 @@ class SaasyCompositeService extends AbstractSaasyService {
             serviceShippingAddress:params.remove('serviceShippingAddress'),
             serviceSubscription:params.remove('serviceSubscription'),
             servicePlan:params.remove('servicePlan'),
-            serviceSubscriber:params.remove('serviceSubscriber')
+            serviceSubscriber:params.remove('serviceSubscriber'),
+            servicePlanProductTypes:params.remove('servicePlanProductTypes')
         ]
         doApiCall(SERVICE_BASE_PATH, params, body, POST)
     }
