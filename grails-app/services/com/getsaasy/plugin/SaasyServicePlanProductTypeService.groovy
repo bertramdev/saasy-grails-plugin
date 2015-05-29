@@ -34,6 +34,13 @@ class SaasyServicePlanProductTypeService extends AbstractSaasyService {
         transformPostOutput(doApiCall(SERVICE_BASE_PATH, params, body, PUT))
     }
 
+    // PUT
+    // /api/rest/servicePlanProductType/{id}
+    def upsert(params) {
+        def body = params.remove(API_NAME)
+        transformPostOutput(doApiCall('/api/'+API_NAME+'/upsert', params, body, POST))
+    }
+
     // DELETE
     // /api/rest/servicePlanProductType/{id}
     def cancel(params) {
