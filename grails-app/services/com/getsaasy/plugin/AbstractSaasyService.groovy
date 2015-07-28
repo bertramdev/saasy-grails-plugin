@@ -219,25 +219,35 @@ abstract class AbstractSaasyService {
 			]
 			//log.error(output.message, t)
 		}
-
+		println output
 		return output
 	}
 
-	protected transformSuccess(returnMap) {
+	protected transformSuccess(returnMap) throws SaasyException {
+		if (!returnMap.success)
+			throw new SaasyException(returnMap.msg, returnMap.msgCode, returnMap)
+
         returnMap.success
 	}
 
-	protected transformGetOutput(returnMap) {
+	protected transformGetOutput(returnMap) throws SaasyException  {
+		if (!returnMap.success)
+			throw new SaasyException(returnMap.msg, returnMap.msgCode, returnMap)
+
         def obj = returnMap.data
         convert(obj)
 	}
 
-	protected transformPostOutput(returnMap) {
+	protected transformPostOutput(returnMap) throws SaasyException  {
+		if (!returnMap.success)
+			throw new SaasyException(returnMap.msg, returnMap.msgCode, returnMap)
         def obj = returnMap.data
         convert(obj)
 	}
 
-	protected transformListOutput(returnMap) {
+	protected transformListOutput(returnMap) throws SaasyException  {
+		if (!returnMap.success)
+			throw new SaasyException(returnMap.msg, returnMap.msgCode, returnMap)
         returnMap.data?.each {obj->
             // convert top level dates
             convert(obj)
