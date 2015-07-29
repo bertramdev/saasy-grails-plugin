@@ -107,33 +107,22 @@ abstract class AbstractSaasyService {
     	}
     	if (output.status != 200 ||  output.content?.success == false) {
     		def msg = output.content?.msg 
+			if (!msg && output.content?.errorMessages) msg = output.content.errorMessages.join('; ')
+			if (!msg && output.content?.error) msg = output.content.error
+			if (!msg && output.content?.errMsg) msg = output.content.errMsg
+
     		if (!msg) {
     			try { msg =  output.message.getReasonPhrase() } catch(Throwable t) {}
     		}
     		if (!msg) {
     			msg = output.message?.toString() ?: 'Unknown exception'
     		}
+
     		throw new SaasyException(msg, output.status, output.content)
     	}
     	return output.content
 	}
 
-	/**
-	 * Base implementation for making calls to http based resources.  <br/>Example usage
-	 * <blockquote>
-	 * doHttp(
-	 *	  uri:'http://api.paypal.com,
-	 *	  path:'v1/payments/payment',
-	 *	  body:<a map of post params. Or a json object, or xml>,
-	 *	  headers:<a map of request headers>,
-	 *	  Method.POST,
-	 *	  ContentType.JSON
-	 * )
-	 * </blockquote>
-	 * @param params - map of params (named params from method call)
-	 * @param method - The http method as defined in groovyx.net.http.Method
-	 * @param type - The content type of the request as defined in groovyx.net.http.ContentType
-	 */
 	protected doHttp(Map params, Method method = GET, ContentType type = groovyx.net.http.ContentType.JSON) {
 		HTTPBuilder http = new HTTPBuilder(params.uri ?: params.path)
 
@@ -203,11 +192,13 @@ abstract class AbstractSaasyService {
 				}
 
 				// failure handler
-				response.failure = { resp ->
+				response.failure = { resp, reader ->
+					println '> FAILURE '+reader.class
 					output << [
 						status:resp.status,
 						message:resp.statusLine,
-						content:resp.data // if there is any
+						rawText:reader.text,
+						content:reader // if there is any
 					]
 				}
 			}
