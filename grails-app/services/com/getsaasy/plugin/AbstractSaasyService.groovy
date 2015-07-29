@@ -226,6 +226,8 @@ abstract class AbstractSaasyService {
 			throw new SaasyException(returnMap.msg, returnMap.msgCode, returnMap)
 
         def obj = returnMap.data
+        if (obj instanceof List && obj?.size() > 0) obj = obj.getAt(0)
+        else obj = null
         convert(obj)
 	}
 
