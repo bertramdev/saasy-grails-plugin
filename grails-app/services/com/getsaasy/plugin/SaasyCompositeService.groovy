@@ -19,4 +19,9 @@ class SaasyCompositeService extends AbstractSaasyService {
         ]
         doApiCall(SERVICE_BASE_PATH, params, body, POST)
     }
+
+    def ping(params) {
+        doApiCall('/api/ping', params, null, GET)
+    }
+    
 }
