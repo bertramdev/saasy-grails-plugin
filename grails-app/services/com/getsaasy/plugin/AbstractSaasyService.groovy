@@ -290,7 +290,7 @@ abstract class AbstractSaasyService {
 	}
 
 	protected convertDates(obj) {
-		['dateCreated', 'lastUpdated', 'start', 'end', 'effectiveStart', 'effectiveEnd','canceled', 'expires', 'dateShipped', 'lastInvoiced', 'nextInvoiced', 'lastOrderDate', 'nextOrderDate'].each {
+		['dateCreated', 'lastUpdated', 'datePlaced',  'start', 'end', 'effectiveStart', 'effectiveEnd','canceled', 'expires', 'dateShipped', 'lastInvoiced', 'nextInvoiced', 'lastOrderDate', 'nextOrderDate'].each {
 			if (obj.containsKey(it)) obj."$it" = toDate(obj."$it")
 		}
 	}
