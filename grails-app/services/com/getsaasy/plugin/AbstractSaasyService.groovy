@@ -268,6 +268,11 @@ abstract class AbstractSaasyService {
 			}
 			replaceJSONNulls(item)		
 		}
+		else if (item instanceof List) {
+			item.each {
+				convert(it)
+			}
+		}
 		item
 	}
 
