@@ -14,6 +14,9 @@ class SaasyCompositeService extends AbstractSaasyService {
             serviceShippingAddress:params.remove('serviceShippingAddress'),
             serviceSubscription:params.remove('serviceSubscription'),
             servicePlan:params.remove('servicePlan'),
+            calculateCredit:params.remove('calculateCredit'),
+            keepOrderDate:params.remove('keepOrderDate'),
+            prorate:params.remove('prorate'),
             serviceSubscriber:params.remove('serviceSubscriber'),
             servicePlanProductTypes:params.remove('servicePlanProductTypes')
         ]
