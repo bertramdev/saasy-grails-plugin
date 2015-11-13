@@ -164,7 +164,7 @@ abstract class AbstractSaasyService {
 
 				// if we have urlParams, add those
 				if (params.urlParams) uri.query = params.urlParams
-				println uri
+				//println uri
 				output.url = uri.toString()
 				if (params.body) {
 					// TRICKY: For json requests, GStrings in maps can cause bad serialization, so we serialize by hand
@@ -210,7 +210,7 @@ abstract class AbstractSaasyService {
 			]
 			//log.error(output.message, t)
 		}
-		println output
+		//println output
 		return output
 	}
 
