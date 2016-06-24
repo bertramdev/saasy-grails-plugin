@@ -1,4 +1,4 @@
-<plugin name='saasy' version='0.1-SNAPSHOT' grailsVersion='2.4 &gt; *'>
+<plugin name='saasy' version='0.2.1-SNAPSHOT' grailsVersion='2.4 &gt; *'>
   <author>Jeremy Leng</author>
   <authorEmail>jleng@bcap.com</authorEmail>
   <title>Saasy Plugin Plugin</title>
@@ -16,7 +16,9 @@
     <resource>com.getsaasy.plugin.SaasyServiceOrderService</resource>
     <resource>com.getsaasy.plugin.SaasyServicePlanProductTypeService</resource>
     <resource>com.getsaasy.plugin.SaasyServicePlanService</resource>
+    <resource>com.getsaasy.plugin.SaasyServiceSubscriberProductTypeService</resource>
     <resource>com.getsaasy.plugin.SaasyServiceSubscriberService</resource>
+    <resource>com.getsaasy.plugin.SaasyServiceSubscriptionProductTypeService</resource>
     <resource>com.getsaasy.plugin.SaasyServiceSubscriptionService</resource>
   </resources>
 </plugin>

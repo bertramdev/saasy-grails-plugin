@@ -46,4 +46,11 @@ class SaasyServiceSubscriptionService extends AbstractSaasyService {
     def deactivate(params) {
         transformSuccess(doApiCall(SERVICE_BASE_PATH, params, null, DELETE))
     }
+
+    // GET
+    // /api/serviceSubscription/failedSubscriptions
+    def failedSubscriptions() {
+        transformListOutput(doApiCall('/api/'+API_NAME+'/failedSubscriptions', null, null, GET))
+    }
+
 }

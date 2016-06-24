@@ -20,3 +20,5 @@ goVivid.iml
 /src/sql/DEV_4-22-15.sql
 
 *.zip
+
+*.sha1
