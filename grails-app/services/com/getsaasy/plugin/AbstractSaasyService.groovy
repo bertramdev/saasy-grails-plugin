@@ -193,7 +193,7 @@ abstract class AbstractSaasyService {
 
 				// failure handler
 				response.failure = { resp, reader ->
-					println '> FAILURE '+reader?.class
+					//println '> FAILURE '+reader?.class
 					output << [
 						status:resp.status,
 						message:resp.statusLine,
