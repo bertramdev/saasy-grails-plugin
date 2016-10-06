@@ -50,7 +50,7 @@ class SaasyServiceOrderService extends AbstractSaasyService {
     // GET
     // /api/serviceOrder/failedOrders
     def failedOrders() {
-        transformSuccess(doApiCall('/api/'+API_NAME+'/failedOrders', params, null, DELETE))
+        transformSuccess(doApiCall('/api/'+API_NAME+'/failedOrders', params, null, GET))
     }
 
 }
