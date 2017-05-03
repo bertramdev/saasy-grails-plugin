@@ -17,6 +17,8 @@ grails.project.fork = [
 ]
 
 grails.project.repos.bertramlabsSnap.url = "http://nexus.bertramlabs.com/content/repositories/publicSnapshots"
+grails.project.repos.bertramlabsSnap.username = 'jleng'
+grails.project.repos.bertramlabsSnap.password = 'Pa55w0rd'
 
 grails.project.repos.bertramlabsRel.url = "http://nexus.bertramlabs.com/content/repositories/publicReleases"
 
