@@ -22,3 +22,8 @@ goVivid.iml
 *.zip
 
 *.sha1
+
+*.iml
+
+wrapper/*
+grailsw*
