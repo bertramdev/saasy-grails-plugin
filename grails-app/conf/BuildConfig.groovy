@@ -46,7 +46,8 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
         // runtime 'mysql:mysql-connector-java:5.1.27'
-        compile ('org.codehaus.groovy.modules.http-builder:http-builder:0.7') 
+//        compile ('org.codehaus.groovy.modules.http-builder:http-builder:0.7.1')
+		compile ('io.github.http-builder-ng:http-builder-ng-apache:0.16.1')
     }
 
     plugins {
