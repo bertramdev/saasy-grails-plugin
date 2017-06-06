@@ -12,12 +12,9 @@ setEnvironment
 
 .DS_Store
 .idea/
-goVivid-grailsPlugins.iml
-goVivid.iml
 
 /deps.txt
 
-/src/sql/DEV_4-22-15.sql
 
 *.zip
 
@@ -25,5 +22,3 @@ goVivid.iml
 
 *.iml
 
-wrapper/*
-grailsw*
