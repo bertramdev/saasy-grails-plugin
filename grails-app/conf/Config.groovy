@@ -68,3 +68,15 @@ grails.converters.default.pretty.print
 saasy.apiKey='4882e756-7ebf-4902-be42-9e3884edb2aa'
 saasy.baseUrl='http://localhost:8080'
 grails.app.context = "/"
+
+environments {
+	development {
+		saasy.ignoreSslIssues=false
+	}
+	test {
+		saasy.ignoreSslIssues=true
+	}
+	production {
+		saasy.ignoreSslIssues=false
+	}
+}

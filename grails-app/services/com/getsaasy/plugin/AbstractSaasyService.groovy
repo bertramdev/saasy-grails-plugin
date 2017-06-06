@@ -11,6 +11,7 @@ import groovyx.net.http.HttpVerb
 import static groovyx.net.http.ContentTypes.*
 import static groovyx.net.http.HttpBuilder.configure
 import static groovyx.net.http.HttpVerb.*
+import static groovyx.net.http.util.SslUtils.ignoreSslIssues
 
 
 abstract class AbstractSaasyService {
@@ -368,6 +369,9 @@ abstract class AbstractSaasyService {
 		log.info "doGet params: ${params}"
 		log.info "doGet type: ${type}"
 		def result = configure {
+			if (grailsApplication.config.saasy?.ignoreSslIssues) {
+				ignoreSslIssues execution
+			}
 
 			// If we have request headers set them
 			if (params.headers) {
@@ -462,6 +466,9 @@ abstract class AbstractSaasyService {
 		log.info "doPost params: ${params}"
 		log.info "doPost type: ${type}"
 		def result = configure {
+			if (grailsApplication.config.saasy?.ignoreSslIssues) {
+				ignoreSslIssues execution
+			}
 
 			// If we have request headers set them
 			if (params.headers) {
