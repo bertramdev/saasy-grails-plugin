@@ -1,7 +1,7 @@
 package com.getsaasy.plugin
 
 import grails.transaction.Transactional
-import static groovyx.net.http.Method.*
+import static groovyx.net.http.HttpVerb.*
 
 @Transactional
 class SaasyServiceSubscriptionService extends AbstractSaasyService {

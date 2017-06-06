@@ -1,26 +1,16 @@
 package com.getsaasy.plugin
 
-import grails.transaction.Transactional
-
+import groovyx.net.http.FromServer
+import groovyx.net.http.NativeHandlers
 import org.springframework.context.i18n.LocaleContextHolder
 import java.text.*
-import com.bertramlabs.plugins.*
-import grails.util.Holders
-import java.lang.reflect.*
-import groovyx.net.http.ContentType
-import groovyx.net.http.HTTPBuilder
-import groovyx.net.http.Method
-import org.apache.http.auth.AuthScope
-import org.apache.http.auth.UsernamePasswordCredentials
-import org.apache.http.client.CredentialsProvider
-import org.apache.http.impl.client.BasicCredentialsProvider
-import org.springframework.context.i18n.LocaleContextHolder as LCH
-import grails.converters.*
-import java.io.*
-import java.util.regex.Pattern
+import groovyx.net.http.ContentTypes
+import groovyx.net.http.HttpBuilder
+import groovyx.net.http.HttpVerb
 
-import static groovyx.net.http.ContentType.*
-import static groovyx.net.http.Method.*
+import static groovyx.net.http.ContentTypes.*
+import static groovyx.net.http.HttpBuilder.configure
+import static groovyx.net.http.HttpVerb.*
 
 
 abstract class AbstractSaasyService {
@@ -86,7 +76,7 @@ abstract class AbstractSaasyService {
 	}
 
 
-	protected doApiCall(String path, Map urlParams = [:], Map body = null, Method method = null ) {
+	protected doApiCall(String path, Map urlParams = [:], Map body = null, HttpVerb method = null ) {
     	def apiParams = [:]
     	apiParams.urlParams = [apiKey:apiKey, format:'json', token:token]
     	if (body) {
@@ -123,10 +113,33 @@ abstract class AbstractSaasyService {
     	return output.content
 	}
 
-	protected doHttp(Map params, Method method = GET, ContentType type = groovyx.net.http.ContentType.JSON) {
-		HTTPBuilder http = new HTTPBuilder(params.uri ?: params.path)
+	protected doHttp(Map params, HttpVerb method = GET, ContentTypes type = groovyx.net.http.ContentTypes.JSON) {
+//		HTTPBuilder http = new HTTPBuilder(params.uri ?: params.path)
+		def output = [:]
 
-		//log.info("doHttp() method: ${method}, type: ${type}, params: ${params}")
+		log.debug "params: ${params}"
+
+		def opts = [:]
+		opts.type = type
+
+		if(params.urlParams) {
+			def scrubbedKeys = params.urlParams.findAll { it.value }.collect { it.key }
+			log.info "doHttp scrubbedKeys: ${scrubbedKeys}"
+			params.urlParams = params.urlParams.subMap(scrubbedKeys)
+		}
+
+		opts.params = params
+
+		switch(method) {
+			case POST:
+				output = doPost(opts)
+				break
+			default:
+				output = doGet(opts)
+		}
+/*
+		log.info("doHttp() method: ${method}, type: ${type}, params: ${params}")
+		log.debug("DEBUG!!!")
 
 		// if timeouts exist
 		if (params.connectionTimeout)
@@ -152,6 +165,7 @@ abstract class AbstractSaasyService {
 					}
 				}
 				headers['Content-Type'] = type.toString()
+				log.info "headers: ${headers.dump()}"
 
 				// If supplied username/password default to basic auth
 				if (params.username && params.password) {
@@ -164,7 +178,8 @@ abstract class AbstractSaasyService {
 
 				// if we have urlParams, add those
 				if (params.urlParams) uri.query = params.urlParams
-				//println uri
+				log.info "uri: ${uri?.dump()}"
+				log.info "uri.host: ${uri?.host}"
 				output.url = uri.toString()
 				if (params.body) {
 					// TRICKY: For json requests, GStrings in maps can cause bad serialization, so we serialize by hand
@@ -189,7 +204,7 @@ abstract class AbstractSaasyService {
 							output.content = respBody // JSON object, or XML object
 							break
 					}
-				}
+				}	
 
 				// failure handler
 				response.failure = { resp, reader ->
@@ -211,6 +226,7 @@ abstract class AbstractSaasyService {
 			//log.error(output.message, t)
 		}
 		//println output
+		*/
 		return output
 	}
 
@@ -321,7 +337,7 @@ abstract class AbstractSaasyService {
 				}
 				rtn = df.parse( input )
 			} catch (Throwable t1) {
-				println t1
+				log.error t1
 			}
 		}
 		if (!rtn) {
@@ -331,16 +347,195 @@ abstract class AbstractSaasyService {
 					def messageSource = grails.util.Holders.grailsApplication.mainContext['messageSource']
 					dateFormat = messageSource.getMessage('com.bertramlabs.plugins.datePicker.dateFormat', null, LocaleContextHolder.locale)
 				} catch (Throwable t) {
-					println t
+					log.error t
 				}
 				dateFormat = dateFormat ?: 'MM/dd/yyyy'
 				SimpleDateFormat df = new SimpleDateFormat( dateFormat )
 				rtn = df.parse( val.toString() )
 			} catch (Throwable t1) {
-				println t1
+				log.error t1
 			}
 		}
 		if (!rtn) rtn = val
 		return rtn
+	}
+
+	def doGet(opts = [:]) {
+		def output = [:]
+		log.info "doGet opts: ${opts}"
+		def params = opts.params ?: [:]
+		def type = opts.type ?: JSON.getAt(0)
+		log.info "doGet params: ${params}"
+		log.info "doGet type: ${type}"
+		def result = configure {
+
+			// If we have request headers set them
+			if (params.headers) {
+				params.headers.each { key, val ->
+					request.headers."${key}" = val.toString()
+				}
+			}
+			request.headers['Content-Type'] = type.getAt(0)
+			request.contentType = type.getAt(0)
+			log.info "goGet headers: ${request.headers.dump()}"
+			log.info "goGet request.contentType: ${request.contentType}"
+
+			// If supplied username/password default to basic auth
+			if (params.username && params.password) {
+				def creds = "${params.username}:${params.password}"
+				request.headers.Authorization = "Basic ${creds.getBytes().encodeBase64().toString()}".toString()
+			}
+
+			if(params.uri) {
+				log.info "doGet request.uri?.dump() before: ${request.uri?.dump()}"
+				request.uri = params.uri
+				log.info "doGet request.uri?.dump() after: ${request.uri?.dump()}"
+				log.info "doGet params.uri: ${params.uri}"
+			} else {
+				log.info "doGet params.uri doesn't exist"
+			}
+
+		}.get {
+			if (params.urlParams) {
+				def scrubbedKeys = params.urlParams.findAll { it.value }.collect { it.key }
+				log.info "doGet scrubbedKeys: ${scrubbedKeys}"
+				def scrubbedParams = params.urlParams.subMap(scrubbedKeys)
+				log.info "doGet scrubbedParams: ${scrubbedParams}"
+				request.uri.query = scrubbedParams
+				log.info "doGet request.uri.query after: ${request.uri?.query}"
+			} else {
+				log.info "doGet params.urlParams doesn't exist"
+			}
+
+			if (params.path) {
+				log.info "doGet request.uri: ${request.uri}"
+				log.info "doGet params.path: ${params.path}"
+				request.uri.path = params.path.toString()
+			} else {
+				log.info "doGet params.path doesn't exist"
+			}
+			log.info "goGet request: ${request.dump()}"
+
+			response.success { FromServer fs, Object body ->
+				log.info "goGet fs: ${fs.dump()}"
+				log.info "goGet body.dump(): ${body.dump()}"
+				output.url = fs.uri.toString()
+				output.status = fs.statusCode
+				output.headers = fs.headers
+				output.contentType = fs.contentType
+				switch(output.contentType) {
+					case TEXT:
+						output.content = body?.toString()
+						break
+					default:
+						output.content = body
+						break
+				}
+				body
+			}
+			
+			response.failure { FromServer fs, Object body ->
+				output.url = fs.uri.toString()
+				output.status = fs.statusCode
+				output.headers = fs.headers
+				output.contentType = fs.contentType
+				switch(output.contentType) {
+					case TEXT:
+						output.content = body?.toString()
+						break
+					default:
+						output.content = body
+						break
+				}				
+			}
+		}
+		log.info "goGet result: ${result}"
+		log.info "goGet output: ${output}"
+		output
+	}
+
+	def doPost(opts = [:]) {
+		def output = [:]
+		log.info "doPost opts: ${opts}"
+		def params = opts.params ?: [:]
+		def type = opts.type ?: JSON.getAt(0)
+		log.info "doPost params: ${params}"
+		log.info "doPost type: ${type}"
+		def result = configure {
+
+			// If we have request headers set them
+			if (params.headers) {
+				params.headers.each { key, val ->
+					request.headers."${key}" = val.toString()
+				}
+			}
+			request.headers['Content-Type'] = type.getAt(0)
+			request.contentType = type.getAt(0)
+			log.info "goPost headers: ${request.headers.dump()}"
+
+			// If supplied username/password default to basic auth
+			if (params.username && params.password) {
+				def creds = "${params.username}:${params.password}"
+				request.headers.Authorization = "Basic ${creds.getBytes().encodeBase64().toString()}".toString()
+			}
+
+			if(params.uri)
+				request.uri = params.uri
+
+		}.post {
+			if (params.urlParams) request.uri.query = params.urlParams
+
+			if(params.isForm)
+				request.contentType = URLENC.getAt(0)
+
+			if (params.path)
+				request.uri.path = params.path.toString()
+
+			if(params.body) {
+				log.info "goPost body: ${params.body}"
+				if(type == JSON.getAt(0) && !params.isForm && (params.body instanceof Map || params.body instanceof List))
+					request.body = (params.body as grails.converters.JSON).toString()
+				else
+					request.body = params.body
+			}
+
+			log.info "goPost request: ${request.dump()}"
+
+			response.success { FromServer fs, Object body ->
+				log.info "goPost fs: ${fs.dump()}"
+				log.info "goPost body.dump(): ${body.dump()}"
+				output.url = fs.uri.toString()
+				output.status = fs.statusCode
+				output.headers = fs.headers
+				output.contentType = fs.contentType
+				switch(output.contentType) {
+					case TEXT:
+						output.content = body.toString()
+						break
+					default:
+						output.content = body
+						break
+				}
+				body
+			}
+
+			response.failure { FromServer fs, Object body ->
+				output.url = fs.uri.toString()
+				output.status = fs.statusCode
+				output.headers = fs.headers
+				output.contentType = fs.contentType
+				switch(output.contentType) {
+					case TEXT:
+						output.content = body?.toString()
+						break
+					default:
+						output.content = body
+						break
+				}
+			}
+		}
+		log.info "goPost result: ${result}"
+		log.info "goPost output: ${output}"
+		output
 	}
 }
