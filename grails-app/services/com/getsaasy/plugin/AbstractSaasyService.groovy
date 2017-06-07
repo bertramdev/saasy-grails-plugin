@@ -593,7 +593,7 @@ abstract class AbstractSaasyService {
 			}
 			request.headers['Content-Type'] = type.getAt(0)
 			request.contentType = type.getAt(0)
-			log.info "goPost headers: ${request.headers.dump()}"
+			log.info "doPut headers: ${request.headers.dump()}"
 
 			// If supplied username/password default to basic auth
 			if (params.username && params.password) {
@@ -604,7 +604,7 @@ abstract class AbstractSaasyService {
 			if(params.uri)
 				request.uri = params.uri
 
-		}.post {
+		}.put {
 			if (params.urlParams) request.uri.query = params.urlParams
 
 			if(params.isForm)
