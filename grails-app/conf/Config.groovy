@@ -7,7 +7,7 @@ log4j = {
     //appenders {
     //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
     //}
-	debug  'com.getsaasy.plugin'
+	debug  'grails.app.services.com.getsaasy.plugin'
 
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP
@@ -74,7 +74,7 @@ environments {
 		saasy.ignoreSslIssues=false
 	}
 	test {
-		saasy.ignoreSslIssues=true
+		saasy.ignoreSslIssues=false
 	}
 	production {
 		saasy.ignoreSslIssues=false

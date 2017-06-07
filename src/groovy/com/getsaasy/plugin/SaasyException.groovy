@@ -54,7 +54,6 @@ class SaasyException extends RuntimeException {
 		this.data = dat
 	} 
 
-
 	public SaasyException(String msg, int code, Map dat) {
 		super(msg)
 		this.responseCode = code
@@ -70,8 +69,7 @@ class SaasyException extends RuntimeException {
 		super(cause)
 		this.responseCode = code
 		this.data = dat
-	} 
-
+	}
 
 	public SaasyException(String msg, int code, Throwable cause, Map dat) {
 		super(msg, cause)

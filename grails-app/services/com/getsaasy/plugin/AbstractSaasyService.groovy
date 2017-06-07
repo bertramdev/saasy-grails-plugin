@@ -3,6 +3,8 @@ package com.getsaasy.plugin
 import groovyx.net.http.FromServer
 import groovyx.net.http.NativeHandlers
 import org.springframework.context.i18n.LocaleContextHolder
+
+import java.nio.charset.StandardCharsets
 import java.text.*
 import groovyx.net.http.ContentTypes
 import groovyx.net.http.HttpBuilder
@@ -97,7 +99,7 @@ abstract class AbstractSaasyService {
     		if (apiParams.urlParams.token) output = doHttp(apiParams,method)
     	}
     	if (output.status != 200 ||  output.content?.success == false) {
-    		def msg = output.content?.msg 
+			def msg = output.content?.msg
 			if (!msg && output.content?.errorMessages) msg = output.content.errorMessages.join('; ')
 			if (!msg && output.content?.error) msg = output.content.error
 			if (!msg && output.content?.errMsg) msg = output.content.errMsg
@@ -428,33 +430,46 @@ abstract class AbstractSaasyService {
 				output.headers = fs.headers
 				output.contentType = fs.contentType
 				switch(output.contentType) {
-					case TEXT:
-						output.content = body?.toString()
+					case TEXT.getAt(0):
+						output.content = [content:body?.toString()]
+						break
+					case JSON.getAt(0):
+						output.content = body
 						break
 					default:
-						output.content = body
+						output.content = [content:body]
 						break
 				}
 				body
 			}
 			
 			response.failure { FromServer fs, Object body ->
+				log.debug "doGet failure: ${body}"
 				output.url = fs.uri.toString()
 				output.status = fs.statusCode
 				output.headers = fs.headers
 				output.contentType = fs.contentType
+
 				switch(output.contentType) {
-					case TEXT:
-						output.content = body?.toString()
+					case TEXT.getAt(0):
+						output.content = [content:body?.toString()]
 						break
-					default:
+					case HTML.getAt(0):
+						output.content = [content:new String(body, StandardCharsets.UTF_8)]
+						break
+					case JSON.getAt(0):
 						output.content = body
 						break
-				}				
+					default:
+						output.content = [content:body]
+						break
+				}
+//				output.content = fs.reader
+				body
 			}
 		}
-		log.info "goGet result: ${result}"
-		log.info "goGet output: ${output}"
+//		log.info "goGet result: ${result}"
+//		log.info "goGet output: ${output}"
 		output
 	}
 
@@ -516,11 +531,14 @@ abstract class AbstractSaasyService {
 				output.headers = fs.headers
 				output.contentType = fs.contentType
 				switch(output.contentType) {
-					case TEXT:
-						output.content = body.toString()
+					case TEXT.getAt(0):
+						output.content = [content:body?.toString()]
+						break
+					case JSON.getAt(0):
+						output.content = body
 						break
 					default:
-						output.content = body
+						output.content = [content:body]
 						break
 				}
 				body
@@ -532,17 +550,22 @@ abstract class AbstractSaasyService {
 				output.headers = fs.headers
 				output.contentType = fs.contentType
 				switch(output.contentType) {
-					case TEXT:
+					case TEXT.getAt(0):
 						output.content = body?.toString()
+						break
+					case HTML.getAt(0):
+						output.content = new String(body, StandardCharsets.UTF_8)
 						break
 					default:
 						output.content = body
 						break
 				}
+//				output.content = fs.reader
+				body
 			}
 		}
-		log.info "goPost result: ${result}"
-		log.info "goPost output: ${output}"
+//		log.info "goPost result: ${result}"
+//		log.info "goPost output: ${output}"
 		output
 	}
 }
