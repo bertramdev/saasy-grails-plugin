@@ -9,7 +9,7 @@ class SaasyServicePlanProductTypeServiceIntegrationSpec extends IntegrationSpec 
 
 	def setup() {
 		grailsApplication.config.saasy.baseUrl = "https://app.stage.getsaasy.com"
-		grailsApplication.config.saasy.apiKey = "6420d2b5-e16c-4394-96e7-e6e49242d9b5"
+//		grailsApplication.config.saasy.apiKey = "6420d2b5-e16c-4394-96e7-e6e49242d9b5"
     }
 
     def cleanup() {
