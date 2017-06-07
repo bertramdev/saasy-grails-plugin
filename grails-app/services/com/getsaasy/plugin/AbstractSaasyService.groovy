@@ -121,6 +121,7 @@ abstract class AbstractSaasyService {
 		def output = [:]
 
 		log.debug "params: ${params}"
+		log.debug "method: ${method}"
 
 		def opts = [:]
 		opts.type = type
@@ -136,6 +137,9 @@ abstract class AbstractSaasyService {
 		switch(method) {
 			case POST:
 				output = doPost(opts)
+				break
+			case PUT:
+				output = doPut(opts)
 				break
 			default:
 				output = doGet(opts)
@@ -526,6 +530,102 @@ abstract class AbstractSaasyService {
 			response.success { FromServer fs, Object body ->
 				log.info "goPost fs: ${fs.dump()}"
 				log.info "goPost body.dump(): ${body.dump()}"
+				output.url = fs.uri.toString()
+				output.status = fs.statusCode
+				output.headers = fs.headers
+				output.contentType = fs.contentType
+				switch(output.contentType) {
+					case TEXT.getAt(0):
+						output.content = [content:body?.toString()]
+						break
+					case JSON.getAt(0):
+						output.content = body
+						break
+					default:
+						output.content = [content:body]
+						break
+				}
+				body
+			}
+
+			response.failure { FromServer fs, Object body ->
+				output.url = fs.uri.toString()
+				output.status = fs.statusCode
+				output.headers = fs.headers
+				output.contentType = fs.contentType
+				switch(output.contentType) {
+					case TEXT.getAt(0):
+						output.content = body?.toString()
+						break
+					case HTML.getAt(0):
+						output.content = new String(body, StandardCharsets.UTF_8)
+						break
+					default:
+						output.content = body
+						break
+				}
+//				output.content = fs.reader
+				body
+			}
+		}
+//		log.info "goPost result: ${result}"
+//		log.info "goPost output: ${output}"
+		output
+	}
+
+	def doPut(opts = [:]) {
+		def output = [:]
+		log.info "doPut opts: ${opts}"
+		def params = opts.params ?: [:]
+		def type = opts.type ?: JSON.getAt(0)
+		log.info "doPut params: ${params}"
+		log.info "doPut type: ${type}"
+		def result = configure {
+			if (grailsApplication.config.saasy?.ignoreSslIssues) {
+				ignoreSslIssues execution
+			}
+
+			// If we have request headers set them
+			if (params.headers) {
+				params.headers.each { key, val ->
+					request.headers."${key}" = val.toString()
+				}
+			}
+			request.headers['Content-Type'] = type.getAt(0)
+			request.contentType = type.getAt(0)
+			log.info "goPost headers: ${request.headers.dump()}"
+
+			// If supplied username/password default to basic auth
+			if (params.username && params.password) {
+				def creds = "${params.username}:${params.password}"
+				request.headers.Authorization = "Basic ${creds.getBytes().encodeBase64().toString()}".toString()
+			}
+
+			if(params.uri)
+				request.uri = params.uri
+
+		}.post {
+			if (params.urlParams) request.uri.query = params.urlParams
+
+			if(params.isForm)
+				request.contentType = URLENC.getAt(0)
+
+			if (params.path)
+				request.uri.path = params.path.toString()
+
+			if(params.body) {
+				log.info "doPut body: ${params.body}"
+				if(type == JSON.getAt(0) && !params.isForm && (params.body instanceof Map || params.body instanceof List))
+					request.body = (params.body as grails.converters.JSON).toString()
+				else
+					request.body = params.body
+			}
+
+			log.info "doPut request: ${request.dump()}"
+
+			response.success { FromServer fs, Object body ->
+				log.info "doPut fs: ${fs.dump()}"
+				log.info "doPut body.dump(): ${body.dump()}"
 				output.url = fs.uri.toString()
 				output.status = fs.statusCode
 				output.headers = fs.headers
